@@ -28,7 +28,10 @@ interface AppState {
   addCapital: (data: { title: string; category: string; items: CapitalItem[]; noteUrl?: string; recordedAt: string }) => void;
   updateCapital: (id: string, data: Partial<CapitalRecord>) => void;
   deleteCapital: (id: string) => void;
-  addSale: (data: { productId: string; locationName: string; productionQty: number; soldQty: number; unitPrice: number; proofUrl?: string; soldAt: string }) => void;
+  addLocation: (data: Omit<SaleLocation, 'id' | 'businessId' | 'createdAt' | 'updatedAt' | 'deletedAt'>, businessIdOverride?: string) => void;
+  updateLocation: (id: string, data: Partial<SaleLocation>) => void;
+  deleteLocation: (id: string) => void;
+  addSale: (data: { productId: string; locationId?: string; locationName: string; productionQty: number; soldQty: number; unitPrice: number; proofUrl?: string; soldAt: string }) => void;
   updateSale: (id: string, data: Partial<SalesRecord>) => void;
   deleteSale: (id: string) => void;
   adjustStock: (productId: string, qty: number, note: string) => void;
@@ -89,16 +92,34 @@ export const useAppStore = create<AppState>()(
       },
       updateCapital: (id, data) => set((state) => ({ capitals: state.capitals.map((item) => item.id === id ? { ...item, ...data, updatedAt: now() } : item) })),
       deleteCapital: (id) => set((state) => ({ capitals: state.capitals.map((item) => item.id === id ? { ...item, deletedAt: now() } : item) })),
-      addSale: ({ productId, locationName, productionQty, soldQty, unitPrice, proofUrl, soldAt }) => {
+      addLocation: (data, businessIdOverride) => {
+        const businessId = businessIdOverride || get().activeBusinessId;
+        const location: SaleLocation = { ...data, id: uid('loc'), businessId, createdAt: now(), updatedAt: now() };
+        set((state) => ({ locations: [location, ...state.locations] }));
+        toast.success('Toko/lokasi berhasil ditambahkan');
+      },
+      updateLocation: (id, data) => set((state) => ({
+        locations: state.locations.map((item) => item.id === id ? { ...item, ...data, updatedAt: now() } : item)
+      })),
+      deleteLocation: (id) => set((state) => ({
+        locations: state.locations.map((item) => item.id === id ? { ...item, deletedAt: now(), updatedAt: now(), isActive: false } : item)
+      })),
+      addSale: ({ productId, locationId, locationName, productionQty, soldQty, unitPrice, proofUrl, soldAt }) => {
         const state = get();
         const product = state.products.find((item) => item.id === productId);
-        if (!product) return toast.error('Produk tidak ditemukan');
-        if (soldQty > product.stock + productionQty) return toast.error('Stok tidak cukup untuk jumlah terjual');
+        if (!product) {
+          toast.error('Produk tidak ditemukan');
+          return;
+        }
+        if (soldQty > product.stock + productionQty) {
+          toast.error('Stok tidak cukup untuk jumlah terjual');
+          return;
+        }
         const businessId = state.activeBusinessId;
         const revenue = soldQty * unitPrice;
         const cost = soldQty * product.costPrice;
         const sale: SalesRecord = {
-          id: uid('sale'), businessId, productId, locationName, productionQty, soldQty,
+          id: uid('sale'), businessId, productId, locationId, locationName, productionQty, soldQty,
           remainingQty: Math.max(productionQty - soldQty, 0), unitPrice, revenue, cost, profit: revenue - cost,
           proofUrl, soldAt, createdAt: now(), updatedAt: now()
         };
@@ -126,7 +147,7 @@ export const useAppStore = create<AppState>()(
       resetDemo: () => set({ businesses: seedBusinesses, activeBusinessId: seedBusinesses[0].id, products: seedProducts, capitals: seedCapitals, sales: seedSales, locations: seedLocations, stockMovements: seedMovements, notifications: seedNotifications })
     }),
     {
-      name: 'mb-app-v1',
+      name: 'mb-app-v2',
       onRehydrateStorage: () => (state) => state?.setHydrated()
     }
   )

@@ -17,6 +17,7 @@ import { formatDate } from '@/lib/utils';
 export default function SalesPage() {
   const { sales, products, deleteSale } = useBusinessData();
   const [search, setSearch] = useState('');
+  const [open, setOpen] = useState(false);
   const filtered = useMemo(() => sales.filter((sale) => {
     const product = products.find((item) => item.id === sale.productId)?.name || '';
     return `${product} ${sale.locationName} ${sale.revenue}`.toLowerCase().includes(search.toLowerCase());
@@ -24,7 +25,7 @@ export default function SalesPage() {
   return (
     <div>
       <PageHeader title="Manajemen Penjualan" description="Input produksi, lokasi, harga per lokasi, sisa barang, omzet, laba, dan histori penjualan." action={
-        <Dialog><DialogTrigger asChild><Button><Plus className="h-4 w-4" /> Tambah penjualan</Button></DialogTrigger><DialogContent><DialogHeader title="Tambah penjualan" description="Omzet, laba, dan stok dihitung otomatis." /><SaleForm /></DialogContent></Dialog>
+        <Dialog open={open} onOpenChange={setOpen}><DialogTrigger asChild><Button><Plus className="h-4 w-4" /> Tambah penjualan</Button></DialogTrigger><DialogContent><DialogHeader title="Tambah penjualan" description="Omzet, laba, dan stok dihitung otomatis." /><SaleForm onDone={() => setOpen(false)} /></DialogContent></Dialog>
       } />
       <Card className="mb-5"><div className="flex items-center gap-3"><Search className="h-4 w-4 text-slate-400" /><Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari lokasi, produk, omzet..." /></div></Card>
       {filtered.length ? <div className="space-y-3">{filtered.map((sale) => {

@@ -16,11 +16,12 @@ import { formatCurrency } from '@/lib/currency';
 export default function ProductsPage() {
   const { products, deleteProduct } = useBusinessData();
   const [search, setSearch] = useState('');
+  const [open, setOpen] = useState(false);
   const filtered = useMemo(() => products.filter((item) => `${item.name} ${item.sku} ${item.category}`.toLowerCase().includes(search.toLowerCase())), [products, search]);
   return (
     <div>
       <PageHeader title="Sistem Produk" description="Master produk, SKU otomatis, barcode, harga modal, harga jual, margin, stok, dan warning minimum." action={
-        <Dialog><DialogTrigger asChild><Button><Plus className="h-4 w-4" /> Tambah produk</Button></DialogTrigger><DialogContent><DialogHeader title="Tambah produk" description="SKU dan margin dihitung otomatis." /><ProductForm /></DialogContent></Dialog>
+        <Dialog open={open} onOpenChange={setOpen}><DialogTrigger asChild><Button><Plus className="h-4 w-4" /> Tambah produk</Button></DialogTrigger><DialogContent><DialogHeader title="Tambah produk" description="SKU dan margin dihitung otomatis." /><ProductForm onDone={() => setOpen(false)} /></DialogContent></Dialog>
       } />
       <Card className="mb-5"><div className="flex items-center gap-3"><Search className="h-4 w-4 text-slate-400" /><Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari produk, SKU, kategori..." /></div></Card>
       {filtered.length ? <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{filtered.map((product) => {

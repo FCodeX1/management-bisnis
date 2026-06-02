@@ -13,6 +13,7 @@ erDiagram
   businesses ||--o{ activity_logs : logs
   products ||--o{ product_variants : has
   products ||--o{ sales_records : sold_as
+  sale_locations ||--o{ sales_records : records_at
   products ||--o{ stock_movements : moves
   users ||--o{ activity_logs : performs
 ```
@@ -23,6 +24,7 @@ erDiagram
 - `businesses` adalah tenant bisnis; semua data operasional terkait ke bisnis.
 - `products` dan `product_variants` menyimpan master produk, harga modal, harga jual, margin, stok.
 - `capital_records` menyimpan pengeluaran/modal dan item pembelian.
-- `sales_records` menyimpan transaksi penjualan, omzet, laba, lokasi, dan bukti transaksi.
+- `sale_locations` menyimpan toko/outlet/channel penjualan, PIC, alamat, target omzet, jam operasional, status aktif, dan catatan harga.
+- `sales_records` menyimpan transaksi penjualan, omzet, laba, lokasi/toko, dan bukti transaksi.
 - `stock_movements` menjadi audit stok masuk/keluar/adjustment.
 - `reports`, `notifications`, `activity_logs` untuk pelaporan, reminder, dan audit.

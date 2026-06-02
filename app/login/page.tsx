@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { AuthCard } from '@/components/auth/auth-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FormField } from '@/components/ui/form-field';
 import { authSchema } from '@/lib/validations';
 import { useAuthStore } from '@/store/auth-store';
 
@@ -28,14 +29,12 @@ export default function LoginPage() {
   return (
     <AuthCard title="Masuk ke dashboard" description="Kelola modal, penjualan, stok, dan laba bisnis dalam satu tempat.">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <Input placeholder="Email" type="email" {...register('email')} />
-          {errors.email ? <p className="mt-1 text-xs text-red-500">{errors.email.message}</p> : null}
-        </div>
-        <div>
-          <Input placeholder="Password" type="password" {...register('password')} />
-          {errors.password ? <p className="mt-1 text-xs text-red-500">{errors.password.message}</p> : null}
-        </div>
+        <FormField label="Email" required error={errors.email?.message} description="Akun demo sudah terisi otomatis, bisa langsung masuk.">
+          <Input placeholder="owner@demo.com" type="email" autoComplete="email" {...register('email')} />
+        </FormField>
+        <FormField label="Password" required error={errors.password?.message} description="Minimal 6 karakter. Demo: password.">
+          <Input placeholder="password" type="password" autoComplete="current-password" {...register('password')} />
+        </FormField>
         <Button className="w-full" disabled={isSubmitting}>Masuk</Button>
       </form>
       <div className="mt-5 flex items-center justify-between text-sm">

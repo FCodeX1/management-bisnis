@@ -44,9 +44,9 @@ export const seedProducts: Product[] = [
 ];
 
 export const seedLocations: SaleLocation[] = [
-  { id: 'loc_online', businessId: 'biz_sage', name: 'Online', address: 'Instagram & WhatsApp' },
-  { id: 'loc_store', businessId: 'biz_sage', name: 'Toko utama', address: 'Jakarta Selatan' },
-  { id: 'loc_bazaar', businessId: 'biz_sage', name: 'Bazaar', address: 'Event weekend' }
+  { id: 'loc_online', businessId: 'biz_sage', name: 'Online', address: 'Instagram & WhatsApp', phone: '0812-0000-1111', managerName: 'Admin Online', priceNote: 'Harga online bisa menyesuaikan biaya platform.', openingHours: '09:00 - 22:00', targetDailyRevenue: 750000, isActive: true, createdAt: day(20), updatedAt: day(1) },
+  { id: 'loc_store', businessId: 'biz_sage', name: 'Toko utama', address: 'Jakarta Selatan', phone: '0812-0000-2222', managerName: 'Kasir Utama', priceNote: 'Harga outlet mengikuti harga normal.', openingHours: '08:00 - 21:00', targetDailyRevenue: 1000000, isActive: true, createdAt: day(20), updatedAt: day(1) },
+  { id: 'loc_bazaar', businessId: 'biz_sage', name: 'Bazaar', address: 'Event weekend', phone: '', managerName: 'Tim Event', priceNote: 'Harga bazaar bisa lebih tinggi karena biaya booth.', openingHours: '10:00 - 23:00', targetDailyRevenue: 1500000, isActive: true, createdAt: day(15), updatedAt: day(1) }
 ];
 
 export const seedCapitals: CapitalRecord[] = [

@@ -17,11 +17,12 @@ import { formatDate } from '@/lib/utils';
 export default function CapitalPage() {
   const { capitals, deleteCapital } = useBusinessData();
   const [search, setSearch] = useState('');
+  const [open, setOpen] = useState(false);
   const filtered = useMemo(() => capitals.filter((item) => `${item.title} ${item.category} ${item.totalAmount}`.toLowerCase().includes(search.toLowerCase())), [capitals, search]);
   return (
     <div>
       <PageHeader title="Manajemen Modal" description="Catat modal, multi item, foto nota, histori, pencarian, dan auto total calculation." action={
-        <Dialog><DialogTrigger asChild><Button><Plus className="h-4 w-4" /> Tambah modal</Button></DialogTrigger><DialogContent><DialogHeader title="Tambah modal" description="Input beberapa item sekaligus. Total dihitung otomatis." /><CapitalForm /></DialogContent></Dialog>
+        <Dialog open={open} onOpenChange={setOpen}><DialogTrigger asChild><Button><Plus className="h-4 w-4" /> Tambah modal</Button></DialogTrigger><DialogContent><DialogHeader title="Tambah modal" description="Input beberapa item sekaligus. Total dihitung otomatis." /><CapitalForm onDone={() => setOpen(false)} /></DialogContent></Dialog>
       } />
       <Card className="mb-5"><div className="flex items-center gap-3"><Search className="h-4 w-4 text-slate-400" /><Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari nominal, judul, kategori..." /></div></Card>
       {filtered.length ? <div className="space-y-3">{filtered.map((item) => (

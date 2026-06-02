@@ -79,7 +79,15 @@ export interface SaleLocation {
   businessId: string;
   name: string;
   address?: string;
+  phone?: string;
+  managerName?: string;
   priceNote?: string;
+  openingHours?: string;
+  targetDailyRevenue?: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
 }
 
 export interface SalesRecord {

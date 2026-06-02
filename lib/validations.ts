@@ -10,7 +10,19 @@ export const businessSchema = z.object({
   category: z.string().min(2, 'Kategori wajib diisi'),
   description: z.string().optional(),
   address: z.string().optional(),
-  currency: z.string().default('IDR')
+  currency: z.string().min(3, 'Mata uang wajib diisi').default('IDR'),
+  logoUrl: z.string().optional()
+});
+
+export const storeSchema = z.object({
+  name: z.string().min(2, 'Nama toko/lokasi wajib diisi'),
+  address: z.string().optional(),
+  phone: z.string().optional(),
+  managerName: z.string().optional(),
+  priceNote: z.string().optional(),
+  openingHours: z.string().optional(),
+  targetDailyRevenue: z.coerce.number().min(0, 'Target tidak boleh minus').default(0),
+  isActive: z.boolean().default(true)
 });
 
 export const productSchema = z.object({

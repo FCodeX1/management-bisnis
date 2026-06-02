@@ -6,9 +6,10 @@ Aplikasi website modern untuk mencatat modal, penjualan, laba, stok, dan analiti
 
 - Auth lokal untuk demo: login, register, forgot password.
 - Multi business dan switch bisnis cepat.
+- Manajemen toko/lokasi: tambah, edit, nonaktif, target omzet, PIC, alamat, jam operasional, dan catatan harga.
 - Dashboard KPI: penjualan, modal, laba, profit %, stok rendah, trend.
 - Manajemen modal dengan multi item dan upload nota berbasis browser storage.
-- Manajemen penjualan multi lokasi, auto omzet, laba, dan pengurangan stok.
+- Manajemen penjualan multi toko/lokasi, auto omzet, laba, sisa produksi, dan pengurangan stok.
 - Master produk, SKU otomatis, margin otomatis, foto produk, minimum stock warning.
 - Stok realtime dari produk + pergerakan stok.
 - Analitik dengan grafik Recharts.
@@ -55,9 +56,9 @@ Sesuai permintaan: **AI Agent belum dipasang**. Halaman analitik dan insight mem
 ## Struktur folder
 
 ```txt
-app/                 Next.js App Router pages dan API routes
+app/                 Next.js App Router pages, termasuk dashboard, bisnis, toko, modal, penjualan, stok, dan API routes
 components/app/      Layout SaaS, sidebar, bottom nav, topbar
-components/forms/    Form bisnis, produk, modal, penjualan
+components/forms/    Form bisnis, toko/lokasi, produk, modal, penjualan
 components/ui/       shadcn-style reusable UI components
 components/dashboard/Chart dan KPI cards
 data/                Dummy seed local-first
@@ -71,3 +72,13 @@ prisma/              Database schema dan seed production
 public/              PWA manifest, service worker, icons
 types/               TypeScript domain types
 ```
+
+
+## Update versi toko & form rapi
+
+- Halaman baru: `/toko` untuk mengelola toko, outlet, marketplace, reseller, dan bazaar.
+- Form bisnis, produk, modal, penjualan, dan stok sudah memakai label, deskripsi/keterangan, validasi, dan guard sederhana agar input lebih minim bug.
+- Dialog tambah data otomatis tertutup setelah data berhasil disimpan.
+- Persist lokal naik ke `mb-app-v2` agar struktur toko baru tidak bentrok dengan cache versi lama.
+- Penjualan sekarang bisa memilih toko/lokasi dari master toko atau input manual jika lokasinya belum terdaftar.
+- Schema Prisma `sale_locations` sudah ditambah field `phone`, `managerName`, `openingHours`, `targetDailyRevenue`, dan `isActive`.

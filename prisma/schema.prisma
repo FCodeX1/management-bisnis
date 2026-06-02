@@ -124,18 +124,23 @@ model CapitalRecord {
 }
 
 model SaleLocation {
-  id         String        @id @default(cuid())
-  businessId String
-  business   Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  name       String
-  address    String?
-  priceNote  String?
-  sales      SalesRecord[]
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
-  deletedAt  DateTime?
+  id                 String        @id @default(cuid())
+  businessId         String
+  business           Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  name               String
+  address            String?
+  phone              String?
+  managerName        String?
+  priceNote          String?
+  openingHours       String?
+  targetDailyRevenue Decimal       @default(0) @db.Decimal(18, 2)
+  isActive           Boolean       @default(true)
+  sales              SalesRecord[]
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  deletedAt          DateTime?
 
-  @@index([businessId])
+  @@index([businessId, isActive])
   @@map("sale_locations")
 }
 

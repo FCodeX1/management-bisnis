@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart3, Bell, Boxes, Building2, FileText, Home, LineChart, Package, Settings, ShoppingBag, WalletCards } from 'lucide-react';
+import { BarChart3, Bell, Boxes, Building2, FileText, Home, LineChart, Package, Settings, ShoppingBag, Store, WalletCards } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const nav = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
   { href: '/bisnis', label: 'Bisnis', icon: Building2 },
+  { href: '/toko', label: 'Toko', icon: Store },
   { href: '/modal', label: 'Modal', icon: WalletCards },
   { href: '/penjualan', label: 'Penjualan', icon: ShoppingBag },
   { href: '/produk', label: 'Produk', icon: Package },

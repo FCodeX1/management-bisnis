@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart3, Home, Package, Plus, ShoppingBag, WalletCards } from 'lucide-react';
+import { BarChart3, Home, Package, Plus, ShoppingBag, Store, WalletCards } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const nav = [
   { href: '/dashboard', label: 'Home', icon: Home },
+  { href: '/toko', label: 'Toko', icon: Store },
   { href: '/modal', label: 'Modal', icon: WalletCards },
   { href: '/penjualan', label: 'Jual', icon: ShoppingBag },
   { href: '/produk', label: 'Produk', icon: Package },
@@ -17,7 +18,7 @@ export function MobileNav() {
   const pathname = usePathname();
   return (
     <div className="safe-bottom fixed inset-x-3 bottom-3 z-40 rounded-[2rem] border border-white/70 bg-white/82 p-2 shadow-glass backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/82 lg:hidden">
-      <div className="grid grid-cols-5 gap-1">
+      <div className="grid grid-cols-6 gap-1">
         {nav.map((item) => {
           const Icon = item.icon;
           const active = pathname.startsWith(item.href);
