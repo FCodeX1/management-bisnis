@@ -82,3 +82,9 @@ types/               TypeScript domain types
 - Persist lokal naik ke `mb-app-v2` agar struktur toko baru tidak bentrok dengan cache versi lama.
 - Penjualan sekarang bisa memilih toko/lokasi dari master toko atau input manual jika lokasinya belum terdaftar.
 - Schema Prisma `sale_locations` sudah ditambah field `phone`, `managerName`, `openingHours`, `targetDailyRevenue`, dan `isActive`.
+
+## Update mobile sidebar
+
+- Sidebar desktop tetap tampil di layar besar.
+- Di mobile, sidebar tersedia sebagai drawer dari tombol menu hamburger di topbar kiri.
+- Bottom navigation tetap ada sebagai shortcut cepat untuk halaman yang paling sering dipakai.
