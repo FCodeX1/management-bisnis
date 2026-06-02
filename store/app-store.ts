@@ -4,6 +4,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { toast } from 'sonner';
 import type { Business, CapitalItem, CapitalRecord, NotificationItem, Product, SaleLocation, SalesRecord, StockMovement } from '@/types';
+import type { FullImportPayload } from '@/lib/import';
 import { seedBusinesses, seedCapitals, seedLocations, seedMovements, seedNotifications, seedProducts, seedSales } from '@/data/seed';
 import { createSku, uid } from '@/lib/id';
 
@@ -36,6 +37,7 @@ interface AppState {
   deleteSale: (id: string) => void;
   adjustStock: (productId: string, qty: number, note: string) => void;
   markNotificationRead: (id: string) => void;
+  replaceAllData: (data: FullImportPayload) => void;
   resetDemo: () => void;
 }
 
@@ -144,6 +146,16 @@ export const useAppStore = create<AppState>()(
         toast.success('Stok berhasil disesuaikan');
       },
       markNotificationRead: (id) => set((state) => ({ notifications: state.notifications.map((item) => item.id === id ? { ...item, isRead: true } : item) })),
+      replaceAllData: (data) => set({
+        businesses: data.businesses,
+        activeBusinessId: data.activeBusinessId || data.businesses.find((item) => !item.deletedAt)?.id || data.businesses[0]?.id || '',
+        products: data.products,
+        capitals: data.capitals,
+        sales: data.sales,
+        locations: data.locations,
+        stockMovements: data.stockMovements,
+        notifications: data.notifications
+      }),
       resetDemo: () => set({ businesses: seedBusinesses, activeBusinessId: seedBusinesses[0].id, products: seedProducts, capitals: seedCapitals, sales: seedSales, locations: seedLocations, stockMovements: seedMovements, notifications: seedNotifications })
     }),
     {

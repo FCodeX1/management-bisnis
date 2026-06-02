@@ -9,6 +9,7 @@ import { getBusinessMetrics } from '@/lib/analytics';
 import { formatCurrency } from '@/lib/currency';
 import { exportCsv } from '@/lib/export';
 import { ExportAllDataButton } from '@/components/reports/export-all-data-button';
+import { ImportAllDataButton } from '@/components/reports/import-all-data-button';
 
 export default function ReportsPage() {
   const { business, products, capitals, sales } = useBusinessData();
@@ -19,12 +20,13 @@ export default function ReportsPage() {
     <div>
       <PageHeader
         title="Laporan"
-        description="Export Excel semua data, CSV penjualan aktif, print laporan, dan ringkasan performa bisnis."
+        description="Export Excel, import Pakai Data Sendiri, CSV penjualan aktif, print laporan, dan ringkasan performa bisnis."
         action={
           <div className="flex flex-wrap gap-2">
             <Button variant="secondary" onClick={() => window.print()}><Printer className="h-4 w-4" /> Print</Button>
             <Button variant="secondary" onClick={() => exportCsv('laporan-penjualan.csv', rows)}>CSV Penjualan</Button>
             <ExportAllDataButton />
+            <ImportAllDataButton />
           </div>
         }
       />
@@ -33,11 +35,11 @@ export default function ReportsPage() {
           <div>
             <h2 className="font-semibold text-slate-950 dark:text-white">Backup spreadsheet lengkap</h2>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-              Tombol Export Semua Data akan mengunduh file Excel berisi sheet Ringkasan, Keterangan, User, Bisnis, Toko, Produk, Modal, Detail Item Modal, Penjualan, Riwayat Stok, dan Notifikasi.
+              Tombol Export Semua Data akan mengunduh file Excel berisi sheet Ringkasan, Keterangan, User, Bisnis, Toko, Produk, Modal, Detail Item Modal, Penjualan, Riwayat Stok, dan Notifikasi. Tombol Pakai Data Sendiri bisa mengimport lagi file dengan format sama agar data di Excel tampil di aplikasi.
             </p>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Catatan: data berasal dari browser/device ini. Simpan file sebagai backup manual sebelum clear cache atau reset demo.</p>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Catatan: import akan mengganti data lokal pada browser ini. Edit isi kolom, jangan ubah nama sheet dan header agar terbaca benar.</p>
           </div>
-          <ExportAllDataButton variant="secondary" />
+          <div className="flex flex-wrap gap-2"><ExportAllDataButton variant="secondary" /><ImportAllDataButton variant="outline" /></div>
         </div>
       </Card>
 

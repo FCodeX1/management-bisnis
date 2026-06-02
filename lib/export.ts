@@ -188,8 +188,9 @@ export function buildAllDataRows(data: FullExportData) {
     { 'Bagian': 'Sumber data', 'Keterangan': 'Semua data diambil dari localStorage browser yang sedang dipakai saat tombol export ditekan.' },
     { 'Bagian': 'Cakupan', 'Keterangan': 'File ini berisi semua bisnis, toko/lokasi, produk, modal, item modal, penjualan, stok, dan notifikasi yang ada di device ini.' },
     { 'Bagian': 'Backup', 'Keterangan': 'Simpan file ini sebagai cadangan manual sebelum reset demo, ganti browser, atau clear cache.' },
-    { 'Bagian': 'Batasan', 'Keterangan': 'Versi ini belum memiliki tombol import ulang otomatis dari Excel. Data online permanen perlu Supabase/PostgreSQL.' },
-    { 'Bagian': 'Status data', 'Keterangan': 'Kolom Status menunjukkan Aktif, Nonaktif, atau Dihapus sesuai soft delete di aplikasi.' }
+    { 'Bagian': 'Import', 'Keterangan': 'Gunakan tombol Pakai Data Sendiri untuk mengimport ulang file ini. Edit isi data boleh, tetapi jangan ubah nama sheet dan header kolom utama.' },
+    { 'Bagian': 'Status data', 'Keterangan': 'Kolom Status menunjukkan Aktif, Nonaktif, atau Dihapus sesuai soft delete di aplikasi.' },
+    { 'Bagian': 'Batasan', 'Keterangan': 'Versi local-first tetap menyimpan data di browser. Untuk data permanen multi-device, sambungkan ke Supabase/PostgreSQL.' }
   ];
 
   const userRows: SpreadsheetRow[] = data.user ? [{

@@ -13,7 +13,7 @@ Aplikasi website modern untuk mencatat modal, penjualan, laba, stok, dan analiti
 - Master produk, SKU otomatis, margin otomatis, foto produk, minimum stock warning.
 - Stok realtime dari produk + pergerakan stok.
 - Analitik dengan grafik Recharts.
-- Laporan export Excel semua data, export CSV penjualan aktif, dan print browser.
+- Laporan export Excel semua data, import **Pakai Data Sendiri**, export CSV penjualan aktif, dan print browser.
 - Notifikasi, profil, pengaturan, dark mode.
 - PWA manifest + service worker sederhana.
 - Clean architecture: domain, services, repositories, hooks, components, utils, types.
@@ -83,13 +83,15 @@ types/               TypeScript domain types
 - Penjualan sekarang bisa memilih toko/lokasi dari master toko atau input manual jika lokasinya belum terdaftar.
 - Schema Prisma `sale_locations` sudah ditambah field `phone`, `managerName`, `openingHours`, `targetDailyRevenue`, dan `isActive`.
 
-## Update export Excel semua data
+## Update export/import Excel semua data
 
-- Tombol **Export Semua Data** tersedia di halaman `/laporan` dan `/pengaturan`.
+- Tombol **Export Semua Data** dan **Pakai Data Sendiri** tersedia di halaman `/laporan` dan `/pengaturan`.
 - File yang diunduh berbentuk Excel-compatible `.xls` agar bisa langsung dibuka di Microsoft Excel, LibreOffice, atau diimpor ke Google Sheets.
 - Isi workbook: Ringkasan, Keterangan, User, Bisnis, Toko Lokasi, Produk, Modal, Detail Item Modal, Penjualan, Riwayat Stok, dan Notifikasi.
 - Export mengambil semua data lokal dari browser/device yang sedang dipakai, termasuk data multi bisnis.
-- File ini adalah backup manual. Untuk data permanen multi-device, gunakan Supabase/PostgreSQL.
+- Tombol **Pakai Data Sendiri** membaca file `.xls`/`.xml` hasil export dengan format sheet yang sama, lalu mengganti data lokal agar isi Excel tampil di aplikasi.
+- User boleh mengedit isi baris/kolom data, tetapi sebaiknya jangan mengubah nama sheet dan header utama.
+- File ini adalah backup/import manual. Untuk data permanen multi-device, gunakan Supabase/PostgreSQL.
 
 ## Update mobile sidebar
 
