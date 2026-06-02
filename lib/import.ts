@@ -236,8 +236,7 @@ function createIndex<T extends { id: string; name?: string; sku?: string; busine
   return { byId, byName, bySku };
 }
 
-export function parseAllDataExcelText(text: string): FullImportResult {
-  const sheets = readWorkbookXml(text);
+function parseAllDataSheets(sheets: SheetMap): FullImportResult {
   const warnings: string[] = [];
   const businessRows = sheet(sheets, 'Bisnis');
   const locationRows = sheet(sheets, 'Toko Lokasi', 'Toko/Lokasi', 'Toko');
@@ -578,7 +577,81 @@ export function parseAllDataExcelText(text: string): FullImportResult {
   };
 }
 
+
+export function parseAllDataExcelText(text: string): FullImportResult {
+  return parseAllDataSheets(readWorkbookXml(text));
+}
+
+function isProbablyExcelXml(text: string) {
+  const sample = text.slice(0, 4000).trimStart();
+  return sample.startsWith('<?xml') || sample.includes('<Workbook') || sample.includes('urn:schemas-microsoft-com:office:spreadsheet');
+}
+
+async function readWorkbookBinary(buffer: ArrayBuffer): Promise<SheetMap> {
+  const XLSX = await import('xlsx');
+  const workbook = XLSX.read(buffer, {
+    type: 'array',
+    raw: false,
+    cellDates: false
+  });
+
+  if (!workbook.SheetNames.length) {
+    throw new Error('Sheet tidak ditemukan di file Excel.');
+  }
+
+  const sheets: SheetMap = new Map();
+
+  for (const sheetName of workbook.SheetNames) {
+    const worksheet = workbook.Sheets[sheetName];
+    const matrix = XLSX.utils.sheet_to_json(worksheet, {
+      header: 1,
+      defval: '',
+      blankrows: false,
+      raw: false
+    }) as unknown[][];
+
+    const rows = matrix
+      .map((row) => row.map((value) => String(value ?? '').trim()))
+      .filter((row) => row.some((value) => value !== ''));
+
+    if (!rows.length) {
+      sheets.set(sheetName, []);
+      continue;
+    }
+
+    const headers = rows[0].map((header) => header.trim());
+    const body = rows.slice(1).map((values) => {
+      const row: SheetRow = {};
+      headers.forEach((header, index) => {
+        if (header) row[header] = values[index] || '';
+      });
+      return row;
+    }).filter((row) => Object.values(row).some((value) => value !== ''));
+
+    sheets.set(sheetName, body);
+  }
+
+  return sheets;
+}
+
 export async function parseAllDataExcelFile(file: File) {
-  const text = await file.text();
-  return parseAllDataExcelText(text);
+  const buffer = await file.arrayBuffer();
+  const text = new TextDecoder('utf-8').decode(buffer);
+
+  if (isProbablyExcelXml(text)) {
+    return parseAllDataExcelText(text);
+  }
+
+  try {
+    const sheets = await readWorkbookBinary(buffer);
+    return parseAllDataSheets(sheets);
+  } catch (binaryError) {
+    try {
+      return parseAllDataExcelText(text);
+    } catch (xmlError) {
+      console.error('Gagal import Excel binary:', binaryError);
+      console.error('Gagal import Excel XML:', xmlError);
+      throw new Error('File tidak bisa diimport. Aplikasi menerima .xls XML hasil Export Semua Data, .xls Excel asli, dan .xlsx. Pastikan nama sheet dan header kolom tetap sama.');
+    }
+  }
 }

@@ -98,3 +98,15 @@ types/               TypeScript domain types
 - Sidebar desktop tetap tampil di layar besar.
 - Di mobile, sidebar tersedia sebagai drawer dari tombol menu hamburger di topbar kiri.
 - Bottom navigation tetap ada sebagai shortcut cepat untuk halaman yang paling sering dipakai.
+
+
+### Import Excel / Pakai Data Sendiri
+
+Fitur **Pakai Data Sendiri** menerima beberapa format:
+
+- `.xls` hasil **Export Semua Data** dari aplikasi ini.
+- `.xls` yang sudah dibuka lalu disimpan ulang dari Microsoft Excel/LibreOffice.
+- `.xlsx` jika user memilih **Save As > Excel Workbook (.xlsx)**.
+- `.xml` Excel 2003 XML jika user menyimpan format XML.
+
+User boleh mengedit isi data di Excel, tetapi jangan mengubah nama sheet dan header kolom utama seperti `Bisnis`, `Produk`, `Penjualan`, `Toko Lokasi`, dan `Riwayat Stok`.

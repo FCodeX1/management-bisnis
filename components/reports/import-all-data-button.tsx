@@ -18,7 +18,7 @@ export function ImportAllDataButton({ variant = 'outline' }: { variant?: 'defaul
     if (!file) return;
 
     const approved = window.confirm(
-      'Import akan mengganti semua data lokal di browser ini dengan isi file Excel. Pastikan file berasal dari Export Semua Data atau format sheet-nya sama. Lanjutkan?'
+      'Import akan mengganti semua data lokal di browser ini dengan isi file Excel. File boleh .xls hasil export, .xls yang disimpan ulang dari Excel, atau .xlsx. Pastikan nama sheet dan header kolom tetap sama. Lanjutkan?'
     );
     if (!approved) {
       if (inputRef.current) inputRef.current.value = '';
@@ -58,7 +58,7 @@ export function ImportAllDataButton({ variant = 'outline' }: { variant?: 'defaul
         ref={inputRef}
         type="file"
         className="hidden"
-        accept=".xls,.xml,application/vnd.ms-excel,text/xml,application/xml"
+        accept=".xls,.xlsx,.xml,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel.sheet.binary.macroEnabled.12,text/xml,application/xml"
         onChange={(event) => handleFile(event.target.files?.[0])}
       />
       <Button
@@ -66,7 +66,7 @@ export function ImportAllDataButton({ variant = 'outline' }: { variant?: 'defaul
         variant={variant}
         onClick={() => inputRef.current?.click()}
         disabled={isImporting}
-        title="Import file Excel hasil Export Semua Data agar data pribadi tampil di aplikasi"
+        title="Import file .xls/.xlsx hasil Export Semua Data atau file yang sudah diedit manual di Excel"
       >
         <Upload className="h-4 w-4" />
         {isImporting ? 'Mengimport...' : 'Pakai Data Sendiri'}
