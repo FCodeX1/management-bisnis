@@ -1,0 +1,229 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  OWNER
+  ADMIN
+  CASHIER
+  STAFF
+}
+
+enum StockMovementType {
+  IN
+  OUT
+  ADJUSTMENT
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String
+  avatarUrl    String?
+  role         UserRole      @default(OWNER)
+  businesses   Business[]
+  activityLogs ActivityLog[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  deletedAt    DateTime?
+
+  @@map("users")
+}
+
+model Business {
+  id             String          @id @default(cuid())
+  ownerId        String
+  owner          User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name           String
+  logoUrl        String?
+  category       String
+  description    String?
+  address        String?
+  currency       String          @default("IDR")
+  products       Product[]
+  capitalRecords CapitalRecord[]
+  saleLocations  SaleLocation[]
+  salesRecords   SalesRecord[]
+  stockMovements StockMovement[]
+  reports        Report[]
+  notifications  Notification[]
+  activityLogs   ActivityLog[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  deletedAt      DateTime?
+
+  @@index([ownerId])
+  @@map("businesses")
+}
+
+model Product {
+  id                String          @id @default(cuid())
+  businessId        String
+  business          Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  name              String
+  sku               String
+  barcode           String?
+  category          String
+  photoUrl          String?
+  baseUnit          String          @default("pcs")
+  costPrice         Decimal         @db.Decimal(18, 2)
+  sellingPrice      Decimal         @db.Decimal(18, 2)
+  minStock          Int             @default(0)
+  stock             Int             @default(0)
+  variants          ProductVariant[]
+  salesRecords      SalesRecord[]
+  stockMovements    StockMovement[]
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  deletedAt         DateTime?
+
+  @@unique([businessId, sku])
+  @@index([businessId, category])
+  @@map("products")
+}
+
+model ProductVariant {
+  id           String   @id @default(cuid())
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name         String
+  sku          String
+  costPrice    Decimal  @db.Decimal(18, 2)
+  sellingPrice Decimal  @db.Decimal(18, 2)
+  stock        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+
+  @@unique([productId, sku])
+  @@map("product_variants")
+}
+
+model CapitalRecord {
+  id          String   @id @default(cuid())
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  title       String
+  category    String
+  totalAmount Decimal  @db.Decimal(18, 2)
+  noteUrl     String?
+  items       Json
+  recordedAt  DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  @@index([businessId, recordedAt])
+  @@map("capital_records")
+}
+
+model SaleLocation {
+  id         String        @id @default(cuid())
+  businessId String
+  business   Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  name       String
+  address    String?
+  priceNote  String?
+  sales      SalesRecord[]
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  deletedAt  DateTime?
+
+  @@index([businessId])
+  @@map("sale_locations")
+}
+
+model SalesRecord {
+  id               String       @id @default(cuid())
+  businessId       String
+  business         Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  productId        String
+  product          Product      @relation(fields: [productId], references: [id])
+  saleLocationId   String?
+  saleLocation     SaleLocation? @relation(fields: [saleLocationId], references: [id])
+  productionQty    Int          @default(0)
+  soldQty          Int
+  remainingQty     Int
+  unitPrice        Decimal      @db.Decimal(18, 2)
+  revenue          Decimal      @db.Decimal(18, 2)
+  cost             Decimal      @db.Decimal(18, 2)
+  profit           Decimal      @db.Decimal(18, 2)
+  proofUrl         String?
+  soldAt           DateTime
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  deletedAt        DateTime?
+
+  @@index([businessId, soldAt])
+  @@index([productId])
+  @@map("sales_records")
+}
+
+model StockMovement {
+  id          String            @id @default(cuid())
+  businessId  String
+  business    Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product           @relation(fields: [productId], references: [id])
+  type        StockMovementType
+  qty         Int
+  note        String?
+  refType     String?
+  refId       String?
+  createdAt   DateTime          @default(now())
+  deletedAt   DateTime?
+
+  @@index([businessId, productId, createdAt])
+  @@map("stock_movements")
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  title      String
+  type       String
+  payload    Json
+  createdAt  DateTime @default(now())
+  deletedAt  DateTime?
+
+  @@index([businessId, createdAt])
+  @@map("reports")
+}
+
+model Notification {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  title      String
+  message    String
+  type       String
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  deletedAt  DateTime?
+
+  @@index([businessId, isRead])
+  @@map("notifications")
+}
+
+model ActivityLog {
+  id         String    @id @default(cuid())
+  businessId String?
+  business   Business? @relation(fields: [businessId], references: [id])
+  userId     String?
+  user       User?     @relation(fields: [userId], references: [id])
+  action     String
+  entity     String
+  entityId   String?
+  metadata   Json?
+  createdAt  DateTime  @default(now())
+
+  @@index([businessId, createdAt])
+  @@map("activity_logs")
+}

@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 248 245 238;
+  --foreground: 35 45 39;
+}
+
+.dark {
+  --background: 18 23 20;
+  --foreground: 237 240 235;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(126, 175, 119, 0.20), transparent 34rem),
+    radial-gradient(circle at bottom right, rgba(201, 223, 197, 0.24), transparent 28rem),
+    rgb(var(--background));
+  color: rgb(var(--foreground));
+}
+
+.glass {
+  background: rgba(255,255,255,0.68);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.54);
+}
+.dark .glass {
+  background: rgba(24,31,27,0.68);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: white !important; color: #111827 !important; }
+  .print-card { box-shadow: none !important; border: 1px solid #e5e7eb !important; }
+}
