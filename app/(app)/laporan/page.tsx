@@ -1,6 +1,6 @@
 'use client';
 
-import { Download, FileText, Printer } from 'lucide-react';
+import { FileText, Printer } from 'lucide-react';
 import { PageHeader } from '@/components/ui/page-header';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -8,6 +8,7 @@ import { useBusinessData } from '@/hooks/use-business';
 import { getBusinessMetrics } from '@/lib/analytics';
 import { formatCurrency } from '@/lib/currency';
 import { exportCsv } from '@/lib/export';
+import { ExportAllDataButton } from '@/components/reports/export-all-data-button';
 
 export default function ReportsPage() {
   const { business, products, capitals, sales } = useBusinessData();
@@ -16,7 +17,30 @@ export default function ReportsPage() {
 
   return (
     <div>
-      <PageHeader title="Laporan" description="Export CSV, print laporan, dan ringkasan performa bisnis." action={<div className="flex gap-2"><Button variant="secondary" onClick={() => window.print()}><Printer className="h-4 w-4" /> Print</Button><Button onClick={() => exportCsv('laporan-penjualan.csv', rows)}><Download className="h-4 w-4" /> CSV</Button></div>} />
+      <PageHeader
+        title="Laporan"
+        description="Export Excel semua data, CSV penjualan aktif, print laporan, dan ringkasan performa bisnis."
+        action={
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" onClick={() => window.print()}><Printer className="h-4 w-4" /> Print</Button>
+            <Button variant="secondary" onClick={() => exportCsv('laporan-penjualan.csv', rows)}>CSV Penjualan</Button>
+            <ExportAllDataButton />
+          </div>
+        }
+      />
+      <Card className="mb-5 border-sage-200/70 bg-sage-50/70 dark:border-white/10 dark:bg-sage-400/10">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="font-semibold text-slate-950 dark:text-white">Backup spreadsheet lengkap</h2>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+              Tombol Export Semua Data akan mengunduh file Excel berisi sheet Ringkasan, Keterangan, User, Bisnis, Toko, Produk, Modal, Detail Item Modal, Penjualan, Riwayat Stok, dan Notifikasi.
+            </p>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Catatan: data berasal dari browser/device ini. Simpan file sebagai backup manual sebelum clear cache atau reset demo.</p>
+          </div>
+          <ExportAllDataButton variant="secondary" />
+        </div>
+      </Card>
+
       <Card className="print-card">
         <div className="mb-6 flex items-center gap-3"><div className="rounded-2xl bg-sage-100 p-3 text-sage-700"><FileText className="h-5 w-5" /></div><div><h2 className="text-xl font-semibold">Laporan {business?.name}</h2><p className="text-sm text-slate-500">Ringkasan otomatis dari data lokal.</p></div></div>
         <div className="grid gap-3 sm:grid-cols-4">
